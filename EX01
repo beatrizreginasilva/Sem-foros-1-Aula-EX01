@@ -1,0 +1,83 @@
+package SOI6;
+
+import java.util.Random;
+
+public class EX01 {
+    static int CORREDOR = 2000;  // 2km em metros
+    static int TOCHA_DISTANCIA = 500;
+    static int PEDRA_DISTANCIA = 1500;
+
+    public static void main(String[] args) {
+        Random random = new Random();
+
+        // Criar cavaleiros com velocidades aleatórias entre 2 e 4
+        Cavaleiro[] cavaleiros = new Cavaleiro[4];
+        cavaleiros[0] = new Cavaleiro("Cavaleiro 1", 2 + random.nextInt(3));  // Velocidade entre 2 e 4
+        cavaleiros[1] = new Cavaleiro("Cavaleiro 2", 2 + random.nextInt(3));
+        cavaleiros[2] = new Cavaleiro("Cavaleiro 3", 2 + random.nextInt(3));
+        cavaleiros[3] = new Cavaleiro("Cavaleiro 4", 2 + random.nextInt(3));
+
+        boolean tochaPega = false;
+        boolean pedraPega = false;
+
+        while (true) {
+            boolean todosTerminaram = true;
+
+            // Todos os cavaleiros caminham simultaneamente
+            for (Cavaleiro cavaleiro : cavaleiros) {
+                if (cavaleiro.distanciaPercorrida < CORREDOR) {
+                    cavaleiro.andar();
+
+                    // Verificar se um cavaleiro pega a tocha
+                    if (cavaleiro.distanciaPercorrida >= TOCHA_DISTANCIA && !tochaPega) {
+                        cavaleiro.pegarTocha();
+                        tochaPega = true;
+                        System.out.println(cavaleiro.nome + " pegou a tocha e sua velocidade agora é " + cavaleiro.velocidade + "m/50ms");
+                    }
+
+                    // Verificar se um cavaleiro pega a pedra (somente quem não tem a tocha)
+                    if (cavaleiro.distanciaPercorrida >= PEDRA_DISTANCIA && !pedraPega && !cavaleiro.temTocha) {
+                        cavaleiro.pegarPedra();
+                        pedraPega = true;
+                        System.out.println(cavaleiro.nome + " pegou a pedra brilhante e sua velocidade agora é " + cavaleiro.velocidade + "m/50ms");
+                    }
+
+                    todosTerminaram = false;
+                }
+            }
+
+            // Pausa para simular os 50ms (não precisa ser exato)
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            if (todosTerminaram) {
+                break;
+            }
+        }
+
+        // Todos os cavaleiros chegaram ao final
+        System.out.println("Todos os cavaleiros chegaram ao final do corredor.");
+
+        // Escolha de portas
+        boolean[] portas = new boolean[4];
+        int portaSaida = random.nextInt(4);  // Uma porta é a saída
+
+        for (Cavaleiro cavaleiro : cavaleiros) {
+            int escolhaPorta;
+            do {
+                escolhaPorta = random.nextInt(4);
+            } while (portas[escolhaPorta]);  // Garantir que cada porta só é escolhida uma vez
+
+            portas[escolhaPorta] = true;  // Marcar a porta como escolhida
+
+            if (escolhaPorta == portaSaida) {
+                System.out.println(cavaleiro.nome + " porta correta e escapou!");
+            } else {
+                System.out.println(cavaleiro.nome + " porta errada e foi devorado por monstros.");
+            }
+        }
+    }
+}
