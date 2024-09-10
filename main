@@ -1,0 +1,32 @@
+package SOI6;
+
+class Cavaleiro {
+    String nome;
+    int distanciaPercorrida = 0;
+    int velocidade = 2;  
+    boolean temTocha = false;
+    boolean pegouPedra = false;
+
+    public Cavaleiro(String nome, int velocidadeInicial) {
+        this.nome = nome;
+        this.velocidade = velocidadeInicial;
+    }
+
+    public void andar() {
+        distanciaPercorrida += velocidade;
+    }
+
+    public void pegarTocha() {
+        if (!temTocha) {
+            temTocha = true;
+            velocidade += 2;
+        }
+    }
+
+    public void pegarPedra() {
+        if (!pegouPedra) {
+            pegouPedra = true;
+            velocidade += 2;
+        }
+    }
+}
